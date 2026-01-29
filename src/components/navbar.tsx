@@ -20,6 +20,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import Link from "next/link";
+import { ModeToggle } from "./ui/MoodToggle";
 
 interface MenuItem {
   title: string;
@@ -39,6 +40,10 @@ interface Navbar1Props {
   menu?: MenuItem[];
   auth?: {
     login: {
+      title: string;
+      url: string;
+    };
+    signup: {
       title: string;
       url: string;
     };
@@ -69,9 +74,12 @@ const Navbar = ({
       url: "/dashboard",
     },
   ],
+
   auth = {
-    login: { title: "Login", url: "#" },
+    login: { title: "Login", url: "/log-in" },
+    signup: { title: "Sign up", url: "/sign-up" },
   },
+
   className,
 }: Navbar1Props) => {
   return (
@@ -96,8 +104,12 @@ const Navbar = ({
             </NavigationMenu>
 
             <div className="flex gap-2">
+              <ModeToggle></ModeToggle>
               <Button asChild className="bg-[#093B3B] text-white">
                 <a href={auth.login.url}>{auth.login.title}</a>
+              </Button>
+              <Button asChild className="bg-[#093B3B] text-white">
+                <a href={auth.signup.url}>{auth.signup.title}</a>
               </Button>
             </div>
           </div>
@@ -141,6 +153,9 @@ const Navbar = ({
                   <div className="flex flex-col gap-3 ">
                     <Button asChild className="bg-[#093B3B] text-white">
                       <a href={auth.login.url}>{auth.login.title}</a>
+                    </Button>
+                    <Button asChild className="bg-[#093B3B] text-white">
+                      <a href={auth.signup.url}>{auth.signup.title}</a>
                     </Button>
                   </div>
                 </div>
