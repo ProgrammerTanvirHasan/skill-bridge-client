@@ -1,4 +1,3 @@
-import { Navbar } from "@/components/navbar";
 import Display from "@/components/ui/display";
 
 export default function CommonLayout({
@@ -7,9 +6,8 @@ export default function CommonLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="container mx-auto ">
-      <Navbar></Navbar>
-      <Display></Display>
+    <div className="container mx-auto">
+      <Display />
       {children}
     </div>
   );

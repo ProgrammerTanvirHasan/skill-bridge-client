@@ -18,6 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
 import { useForm } from "@tanstack/react-form";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import * as z from "zod";
@@ -30,8 +31,9 @@ const zodSchema = z.object({
 });
 
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
+  const router = useRouter();
   const handleGoogleLogin = async () => {
-    const data = authClient.signIn.social({
+    const data = await authClient.signIn.social({
       provider: "google",
       callbackURL: "http://localhost:3000",
     });
@@ -48,22 +50,28 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
     validators: {
       onSubmit: zodSchema,
     },
+
     onSubmit: async ({ value }) => {
+      const toastId = toast.loading("Logging in");
       console.log("Form data being sent:", value);
-      const toastId = toast.loading("Creating User");
       try {
         const { data, error } = await authClient.signUp.email(value);
+
         if (error) {
           toast.error(error.message, { id: toastId });
+
           return;
         }
-        toast.success("User Created Successfully", { id: toastId });
-      } catch (error) {
-        toast.error("Internal server error");
+
+        toast.success("User Logged in Successfully", { id: toastId });
+
+        setTimeout(() => {
+          router.push("/login");
+        }, 1000);
+      } catch (err) {
+        toast.error("Something went wrong, please try again.", { id: toastId });
       }
     },
-
-    
   });
   return (
     <Card {...props}>

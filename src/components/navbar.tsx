@@ -53,31 +53,18 @@ interface Navbar1Props {
 const Navbar = ({
   logo = {
     url: "/",
-    title: "KnowledgePulse",
+    title: "SkillBridge",
   },
 
   menu = [
     { title: "Home", url: "/" },
-
-    {
-      title: "Tutors",
-      url: "/tutors",
-    },
-
-    {
-      title: "About",
-      url: "/about",
-    },
-
-    {
-      title: "Dashboard",
-      url: "/dashboard",
-    },
+    { title: "Tutors", url: "/tutors" },
+    { title: "Dashboard", url: "/dashboard" },
   ],
 
   auth = {
-    login: { title: "Login", url: "/log-in" },
-    signup: { title: "Sign up", url: "/sign-up" },
+    login: { title: "Login", url: "/login" },
+    signup: { title: "Register", url: "/register" },
   },
 
   className,
