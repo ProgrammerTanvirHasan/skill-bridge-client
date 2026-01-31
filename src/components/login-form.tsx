@@ -44,13 +44,11 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
     },
     onSubmit: async ({ value }) => {
       const toastId = toast.loading("Logging in");
-      console.log("Form data being sent:", value);
       try {
         const { data, error } = await authClient.signIn.email(value);
 
         if (error) {
           toast.error(error.message, { id: toastId });
-         
           return;
         }
 
@@ -64,9 +62,9 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
   return (
     <Card {...props}>
       <CardHeader>
-        <CardTitle>Log in</CardTitle>
+        <CardTitle>Create an account</CardTitle>
         <CardDescription>
-          Enter your email and password to sign in
+          Enter your information below to create your account
         </CardDescription>
       </CardHeader>
       <CardContent>

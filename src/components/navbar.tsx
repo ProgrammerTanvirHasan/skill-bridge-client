@@ -21,6 +21,8 @@ import {
 } from "@/components/ui/sheet";
 import Link from "next/link";
 import { ModeToggle } from "./ui/MoodToggle";
+import { useEffect, useState } from "react";
+import { authClient } from "@/lib/auth-client";
 
 interface MenuItem {
   title: string;
@@ -34,9 +36,11 @@ interface Navbar1Props {
   className?: string;
   logo?: {
     url: string;
+    src: string;
+    alt: string;
     title: string;
+    className?: string;
   };
-
   menu?: MenuItem[];
   auth?: {
     login: {
@@ -52,53 +56,117 @@ interface Navbar1Props {
 
 const Navbar = ({
   logo = {
-    url: "/",
-    title: "SkillBridge",
+    url: "https://www.shadcnblocks.com",
+    src: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/shadcnblockscom-icon.svg",
+    alt: "logo",
+    title: "Shadcnblocks.com",
   },
-
   menu = [
     { title: "Home", url: "/" },
-    { title: "Tutors", url: "/tutors" },
-    { title: "Dashboard", url: "/dashboard" },
-  ],
+    { title: "Blog", url: "/blog" },
 
+    {
+      title: "About",
+      url: "/about",
+    },
+
+    {
+      title: "Contract",
+      url: "/contract",
+    },
+    {
+      title: "Dashboard",
+      url: "/dashboard",
+    },
+    {
+      title: "User Dashboard",
+      url: "/dashboardR",
+    },
+  ],
   auth = {
     login: { title: "Login", url: "/login" },
-    signup: { title: "Register", url: "/register" },
+    signup: { title: "Sign up", url: "/signup" },
   },
-
   className,
 }: Navbar1Props) => {
+  const [user, setUser] = useState<any>(null);
+  console.log(user, "fffffffff");
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/user", {
+          credentials: "include",
+        });
+
+        const data = await res.json();
+        setUser(data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    getUser();
+  }, []);
+
+  const handleLogout = async () => {
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          setUser(null); 
+          console.log("success logout");
+        },
+      },
+    });
+  };
+
   return (
     <section className={cn("py-4", className)}>
-      <div className="container  bg-[#E8F6F3]">
+      <div className="container mx-auto px-4">
         {/* Desktop Menu */}
         <nav className="hidden items-center justify-between lg:flex">
-          {/* Left side: Logo */}
-          <a
-            href={logo.url}
-            className="text-xl font-bold tracking-tight text-[#093B3B]"
-          >
-            {logo.title}
-          </a>
-
-          {/* Right side: Menu + Auth buttons */}
           <div className="flex items-center gap-6">
-            <NavigationMenu>
-              <NavigationMenuList className="flex gap-4 text-[#197265]">
-                {menu.map((item) => renderMenuItem(item))}
-              </NavigationMenuList>
-            </NavigationMenu>
-
-            <div className="flex gap-2">
-              <ModeToggle></ModeToggle>
-              <Button asChild className="bg-[#093B3B] text-white">
-                <a href={auth.login.url}>{auth.login.title}</a>
-              </Button>
-              <Button asChild className="bg-[#093B3B] text-white">
-                <a href={auth.signup.url}>{auth.signup.title}</a>
-              </Button>
+            {/* Logo */}
+            <a href={logo.url} className="flex items-center gap-2">
+              <img
+                src={logo.src}
+                className="max-h-8 dark:invert"
+                alt={logo.alt}
+              />
+              <span className="text-lg font-semibold tracking-tighter">
+                {logo.title}
+              </span>
+            </a>
+            <div className="flex items-center">
+              <NavigationMenu>
+                <NavigationMenuList>
+                  {menu.map((item) => renderMenuItem(item))}
+                </NavigationMenuList>
+              </NavigationMenu>
             </div>
+          </div>
+          <div className="flex gap-2">
+            <ModeToggle></ModeToggle>
+            {user ? (
+              <>
+                <Link href="/dashboard" className="text-sm font-medium">
+                  Dashboard
+                </Link>
+
+                <Button size="sm" variant="outline" onClick={handleLogout}>
+                  Logout
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button asChild variant="outline" size="sm">
+                  <Link href="/login">Login</Link>
+                </Button>
+
+                <Button asChild size="sm">
+                  <Link href="/signup">Signup</Link>
+                </Button>
+              </>
+            )}
           </div>
         </nav>
 
@@ -107,11 +175,12 @@ const Navbar = ({
           <div className="flex items-center justify-between">
             {/* Logo */}
             <a href={logo.url} className="flex items-center gap-2">
-              <span className="text-xl font-bold tracking-tight text-[#093B3B]">
-                {logo.title}
-              </span>
+              <img
+                src={logo.src}
+                className="max-h-8 dark:invert"
+                alt={logo.alt}
+              />
             </a>
-
             <Sheet>
               <SheetTrigger asChild>
                 <Button variant="outline" size="icon">
@@ -122,9 +191,11 @@ const Navbar = ({
                 <SheetHeader>
                   <SheetTitle>
                     <a href={logo.url} className="flex items-center gap-2">
-                      <span className="text-xl font-bold tracking-tight text-[#136E61]">
-                        {logo.title}
-                      </span>
+                      <img
+                        src={logo.src}
+                        className="max-h-8 dark:invert"
+                        alt={logo.alt}
+                      />
                     </a>
                   </SheetTitle>
                 </SheetHeader>
@@ -132,18 +203,38 @@ const Navbar = ({
                   <Accordion
                     type="single"
                     collapsible
-                    className="flex w-full flex-col gap-4 text-[#197265]"
+                    className="flex w-full flex-col gap-4"
                   >
                     {menu.map((item) => renderMobileMenuItem(item))}
                   </Accordion>
 
-                  <div className="flex flex-col gap-3 ">
-                    <Button asChild className="bg-[#093B3B] text-white">
-                      <a href={auth.login.url}>{auth.login.title}</a>
-                    </Button>
-                    <Button asChild className="bg-[#093B3B] text-white">
-                      <a href={auth.signup.url}>{auth.signup.title}</a>
-                    </Button>
+                  <div className="flex flex-col gap-3">
+                    <ModeToggle></ModeToggle>
+                    {user ? (
+                      <>
+                        <Link href="/dashboard" className="text-sm font-medium">
+                          Dashboard
+                        </Link>
+
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={handleLogout}
+                        >
+                          Logout
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <Button asChild variant="outline" size="sm">
+                          <Link href="/login">Login</Link>
+                        </Button>
+
+                        <Button asChild size="sm">
+                          <Link href="/signup">Signup</Link>
+                        </Button>
+                      </>
+                    )}
                   </div>
                 </div>
               </SheetContent>
@@ -162,7 +253,7 @@ const renderMenuItem = (item: MenuItem) => {
         asChild
         className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-accent-foreground"
       >
-        <Link href={item.url}>{item.title}</Link>
+        <Link href={item.url}> {item.title}</Link>
       </NavigationMenuLink>
     </NavigationMenuItem>
   );
