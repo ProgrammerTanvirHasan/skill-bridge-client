@@ -1,7 +1,7 @@
-"use client";
+import * as React from "react"
 
-import * as React from "react";
-import Link from "next/link";
+import { SearchForm } from "@/components/search-form"
+import { VersionSwitcher } from "@/components/version-switcher"
 import {
   Sidebar,
   SidebarContent,
@@ -13,88 +13,170 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
-} from "@/components/ui/sidebar";
-import {
-  LayoutDashboard,
-  Users,
-  BookOpen,
-  FolderOpen,
-  Calendar,
-  User,
-} from "lucide-react";
+} from "@/components/ui/sidebar"
 
-export type AppSidebarVariant = "admin" | "tutor" | "student";
+// This is sample data.
+const data = {
+  versions: ["1.0.1", "1.1.0-alpha", "2.0.0-beta1"],
+  navMain: [
+    {
+      title: "Getting Started",
+      url: "#",
+      items: [
+        {
+          title: "Installation",
+          url: "#",
+        },
+        {
+          title: "Project Structure",
+          url: "#",
+        },
+      ],
+    },
+    {
+      title: "Building Your Application",
+      url: "#",
+      items: [
+        {
+          title: "Routing",
+          url: "#",
+        },
+        {
+          title: "Data Fetching",
+          url: "#",
+          isActive: true,
+        },
+        {
+          title: "Rendering",
+          url: "#",
+        },
+        {
+          title: "Caching",
+          url: "#",
+        },
+        {
+          title: "Styling",
+          url: "#",
+        },
+        {
+          title: "Optimizing",
+          url: "#",
+        },
+        {
+          title: "Configuring",
+          url: "#",
+        },
+        {
+          title: "Testing",
+          url: "#",
+        },
+        {
+          title: "Authentication",
+          url: "#",
+        },
+        {
+          title: "Deploying",
+          url: "#",
+        },
+        {
+          title: "Upgrading",
+          url: "#",
+        },
+        {
+          title: "Examples",
+          url: "#",
+        },
+      ],
+    },
+    {
+      title: "API Reference",
+      url: "#",
+      items: [
+        {
+          title: "Components",
+          url: "#",
+        },
+        {
+          title: "File Conventions",
+          url: "#",
+        },
+        {
+          title: "Functions",
+          url: "#",
+        },
+        {
+          title: "next.config.js Options",
+          url: "#",
+        },
+        {
+          title: "CLI",
+          url: "#",
+        },
+        {
+          title: "Edge Runtime",
+          url: "#",
+        },
+      ],
+    },
+    {
+      title: "Architecture",
+      url: "#",
+      items: [
+        {
+          title: "Accessibility",
+          url: "#",
+        },
+        {
+          title: "Fast Refresh",
+          url: "#",
+        },
+        {
+          title: "Next.js Compiler",
+          url: "#",
+        },
+        {
+          title: "Supported Browsers",
+          url: "#",
+        },
+        {
+          title: "Turbopack",
+          url: "#",
+        },
+      ],
+    },
+  ],
+}
 
-const navConfig: Record<
-  AppSidebarVariant,
-  { title: string; items: { title: string; url: string; icon: React.ComponentType<{ className?: string }> }[] }
-> = {
-  admin: {
-    title: "Admin",
-    items: [
-      { title: "Dashboard", url: "/admin", icon: LayoutDashboard },
-      { title: "Users", url: "/admin/users", icon: Users },
-      { title: "Bookings", url: "/admin/bookings", icon: BookOpen },
-      { title: "Categories", url: "/admin/categories", icon: FolderOpen },
-    ],
-  },
-  tutor: {
-    title: "Tutor",
-    items: [
-      { title: "Dashboard", url: "/tutor/dashboard", icon: LayoutDashboard },
-      { title: "Availability", url: "/tutor/availability", icon: Calendar },
-      { title: "Profile", url: "/tutor/profile", icon: User },
-    ],
-  },
-  student: {
-    title: "Student",
-    items: [
-      { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
-      { title: "My Bookings", url: "/dashboard/bookings", icon: BookOpen },
-      { title: "Profile", url: "/dashboard/profile", icon: User },
-    ],
-  },
-};
-
-type AppSidebarProps = Omit<React.ComponentProps<typeof Sidebar>, "variant"> & {
-  variant?: AppSidebarVariant;
-};
-
-export function AppSidebar({ variant = "admin", ...props }: AppSidebarProps) {
-  const config = navConfig[variant];
-
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar {...props} collapsible="icon">
-      <SidebarHeader className="border-b border-sidebar-border">
-        <div className="flex h-14 items-center px-2">
-          <Link href={config.items[0]?.url ?? "/"} className="flex items-center gap-2 font-semibold">
-            <span className="text-lg">SkillBridge</span>
-          </Link>
-        </div>
+    <Sidebar {...props}>
+      <SidebarHeader>
+        <VersionSwitcher
+          versions={data.versions}
+          defaultVersion={data.versions[0]}
+        />
+        <SearchForm />
       </SidebarHeader>
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>{config.title}</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {config.items.map((item) => {
-                const Icon = item.icon;
-                return (
+        {/* We create a SidebarGroup for each parent. */}
+        {data.navMain.map((item) => (
+          <SidebarGroup key={item.title}>
+            <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {item.items.map((item) => (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild tooltip={item.title}>
-                      <Link href={item.url}>
-                        <Icon className="size-4" />
-                        <span>{item.title}</span>
-                      </Link>
+                    <SidebarMenuButton asChild isActive={item.isActive}>
+                      <a href={item.url}>{item.title}</a>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
-                );
-              })}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        ))}
       </SidebarContent>
       <SidebarRail />
     </Sidebar>
-  );
+  )
 }

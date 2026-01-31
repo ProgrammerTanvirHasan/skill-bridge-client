@@ -33,7 +33,7 @@ export default function ClientNavbar({ user }: { user: any }) {
               <Link href="/admin">Admin Dashboard</Link>
             )}
             {user.role === "TUTOR" && (
-              <Link href="/tutor/dashboard">Tutor Dashboard</Link>
+              <Link href="/tutor">Tutor Dashboard</Link>
             )}
             {user.role === "STUDENT" && (
               <Link href="/dashboard">Student Dashboard</Link>
