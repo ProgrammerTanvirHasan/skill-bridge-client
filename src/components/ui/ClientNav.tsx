@@ -20,23 +20,23 @@ export default function ClientNavbar({ user }: { user: any }) {
   return (
     <nav className="flex justify-between items-center px-6 py-4 border-b">
       <Link href="/" className="font-bold text-xl">
-        Next Blog
+        SkillBridge
       </Link>
 
       <div className="flex gap-3 items-center">
         <Link href="/">Home</Link>
-        <Link href="/blogs">Blogs</Link>
+        <Link href="/tutors">Tutors</Link>
 
         {user ? (
           <>
             {user.role === "ADMIN" && (
-              <Link href="/admin/dashboard">Admin Dashboard</Link>
+              <Link href="/admin">Admin Dashboard</Link>
             )}
             {user.role === "TUTOR" && (
               <Link href="/tutor/dashboard">Tutor Dashboard</Link>
             )}
             {user.role === "STUDENT" && (
-              <Link href="/student/dashboard">Student Dashboard</Link>
+              <Link href="/dashboard">Student Dashboard</Link>
             )}
 
             <span className="font-semibold">{user.name}</span>

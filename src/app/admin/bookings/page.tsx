@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { useDemoUser } from "@/lib/demo-context";
 import { useDemo } from "@/lib/demo-context";
 
@@ -26,7 +25,9 @@ export default function AdminBookingsPage() {
   return (
     <div className="py-8">
       <h1 className="text-3xl font-bold text-foreground">Bookings</h1>
-      <p className="mt-2 text-muted-foreground">View all platform bookings (demo).</p>
+      <p className="mt-2 text-muted-foreground">
+        View all platform bookings (demo).
+      </p>
 
       <Card className="mt-6 overflow-hidden">
         <CardHeader>
@@ -34,7 +35,9 @@ export default function AdminBookingsPage() {
         </CardHeader>
         <CardContent className="p-0">
           {bookings.length === 0 ? (
-            <p className="p-8 text-center text-muted-foreground">No bookings in demo.</p>
+            <p className="p-8 text-center text-muted-foreground">
+              No bookings in demo.
+            </p>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
@@ -45,17 +48,7 @@ export default function AdminBookingsPage() {
                     <th className="p-4 text-left font-medium">Status</th>
                   </tr>
                 </thead>
-                <tbody>
-                  {bookings.map((b) => (
-                    <tr key={b.id} className="border-b">
-                      <td className="p-4 font-medium">{b.tutor?.user?.name ?? "—"}</td>
-                      <td className="p-4 text-muted-foreground">{new Date(b.startAt).toLocaleString()}</td>
-                      <td className="p-4">
-                        <Badge variant={b.status === "CONFIRMED" ? "default" : b.status === "COMPLETED" ? "secondary" : "outline"}>{b.status}</Badge>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
+                <tbody></tbody>
               </table>
             </div>
           )}

@@ -23,7 +23,8 @@ SkillBridge is a full-stack web application that connects learners with expert t
 
 ## Tech Stack
 
-- **Client**: Next.js (App Router), React, TypeScript, Tailwind CSS, Radix UI, Better Auth, TanStack Form, Zod
+- **Client**: Next.js (App Router), React, TypeScript, Tailwind CSS, Radix UI (shadcn/ui), Better Auth, TanStack Form, Zod
+- **Sidebar**: AppSidebar (`@/components/app-sidebar`) uses shadcn Sidebar (`@/components/ui/sidebar`) for Student, Tutor, and Admin dashboards.
 - **Server**: See backend repository for API and database stack.
 
 ---
@@ -90,6 +91,11 @@ SkillBridge is a full-stack web application that connects learners with expert t
 | `/admin/users` | Users | Manage users |
 | `/admin/bookings` | Bookings | All bookings |
 | `/admin/categories` | Categories | Manage categories |
+
+### Dashboard layouts (AppSidebar)
+- **Student**: `/dashboard`, `/dashboard/bookings`, `/dashboard/profile` use `app/dashboard/layout.tsx` with `AppSidebar variant="student"`.
+- **Tutor**: `/tutor/dashboard`, `/tutor/availability`, `/tutor/profile` use `app/tutor/layout.tsx` with `AppSidebar variant="tutor"`.
+- **Admin**: `/admin`, `/admin/users`, `/admin/bookings`, `/admin/categories` use `app/admin/layout.tsx` with `AppSidebar variant="admin"`.
 
 ---
 
