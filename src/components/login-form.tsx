@@ -22,18 +22,11 @@ import { toast } from "sonner";
 import * as z from "zod";
 
 const formSchema = z.object({
-  password: z.string().min(8, "Minimum length is 8"),
   email: z.email(),
+  password: z.string().min(8, "Minimum length is 8"),
 });
 
 export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
-  const handleGoogleLogin = async () => {
-    const data = authClient.signIn.social({
-      provider: "google",
-      callbackURL: "http://localhost:3000",
-    });
-  };
-
   const form = useForm({
     defaultValues: {
       email: "",
@@ -43,7 +36,7 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
       onSubmit: formSchema,
     },
     onSubmit: async ({ value }) => {
-      const toastId = toast.loading("Logging in");
+      const toastId = toast.loading("Logging in...");
       try {
         const { data, error } = await authClient.signIn.email(value);
 
@@ -52,27 +45,38 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
           return;
         }
 
-        toast.success("User Logged in Successfully", { id: toastId });
+        toast.success("User logged in successfully", { id: toastId });
       } catch (err) {
         toast.error("Something went wrong, please try again.", { id: toastId });
       }
     },
   });
 
+  const handleGoogleLogin = async () => {
+    try {
+      await authClient.signIn.social({
+        provider: "google",
+        callbackURL: "http://localhost:3000",
+      });
+    } catch (error) {
+      toast.error("Google login failed");
+    }
+  };
+
   return (
     <Card {...props}>
       <CardHeader>
-        <CardTitle>Create an account</CardTitle>
+        <CardTitle>Login</CardTitle>
         <CardDescription>
-          Enter your information below to create your account
+          Enter your information below to log in to your account.
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form
           id="login-form"
-          onSubmit={(e) => {
+          onSubmit={async (e) => {
             e.preventDefault();
-            form.handleSubmit();
+            await form.handleSubmit();
           }}
         >
           <FieldGroup>
@@ -128,7 +132,7 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
           Login
         </Button>
         <Button
-          onClick={() => handleGoogleLogin()}
+          onClick={handleGoogleLogin}
           variant="outline"
           type="button"
           className="w-full"

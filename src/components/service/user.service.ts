@@ -5,7 +5,7 @@ export const userService = {
     try {
       const cookieStore = await cookies();
 
-      const res = await fetch(`http://localhost:5000/api/user`, {
+      const res = await fetch(`http://localhost:5000/api/user/me`, {
         headers: {
           cookie: cookieStore.toString(),
         },
