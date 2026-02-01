@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/themProvider";
 
 import { Toaster } from "sonner";
 import Navbar from "@/components/navbar";
+import SkillBridgeFooter from "@/components/ui/footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,6 +41,7 @@ export default function RootLayout({
         >
           <Navbar />
           <main className="container mx-auto">{children}</main>
+          <SkillBridgeFooter></SkillBridgeFooter>
         </ThemeProvider>
         <Toaster richColors position="top-right" />
       </body>

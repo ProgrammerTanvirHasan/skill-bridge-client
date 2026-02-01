@@ -9,6 +9,7 @@ export default function CommonLayout({
     <div className="container mx-auto">
       <Display />
       {children}
+      
     </div>
   );
 }

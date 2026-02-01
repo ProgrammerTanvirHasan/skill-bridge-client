@@ -5,7 +5,6 @@ import { Roles } from "./types/roles";
 
 export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
-  console.log(pathname, "pathname");
 
   let isAuthenticated = false;
   let isAdmin = false;
@@ -50,11 +49,11 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/dashboard",
-    "/dashboard/:path*",
-    "/admin",
-    "/admin/:path*",
-    "/tutor",
-    "/tutor/:path*",
+    // "/dashboard",
+    // "/dashboard/:path*",
+    // "/admin",
+    // "/admin/:path*",
+    // "/tutor",
+    // "/tutor/:path*",
   ],
 };

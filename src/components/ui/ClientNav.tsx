@@ -3,6 +3,7 @@
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { ModeToggle } from "./MoodToggle";
 
 export default function ClientNavbar({ user }: { user: any }) {
   const router = useRouter();
@@ -35,7 +36,7 @@ export default function ClientNavbar({ user }: { user: any }) {
               <Link href="/dashboard">Dashboard</Link>
             )}
 
-            <span className="font-semibold">{user.name}</span>
+            <ModeToggle></ModeToggle>
             <button
               onClick={logout}
               className="ml-4 px-3 py-1 border rounded hover:bg-gray-100 transition"
