@@ -1,51 +1,75 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { tutorProfileService } from "@/components/service/tutor.service";
+import { categoryService } from "@/components/service/admin.service";
 
-const categoriesList = [
-  { id: "1", name: "Math" },
-  { id: "2", name: "Science" },
-  { id: "3", name: "English" },
-  { id: "4", name: "Ict" },
-];
+interface Category {
+  id: number;
+  name: string;
+}
 
 export default function TutorProfilePage() {
   const [bio, setBio] = useState("");
   const [hourlyRate, setHourlyRate] = useState("");
   const [status, setStatus] = useState("");
-  const [categoryIds, setCategoryIds] = useState<string[]>([]);
+  const [categoryIds, setCategoryIds] = useState<number[]>([]);
+  const [categoriesList, setCategoriesList] = useState<Category[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
 
-  const handleCategoryChange = (id: string) => {
+  useEffect(() => {
+    async function fetchCategories() {
+      try {
+        const response = await categoryService.getAllCategories();
+        console.log(response, "response");
+        setCategoriesList(response);
+      } catch (err) {
+        setError("Failed to load categories");
+        console.error(err);
+      }
+    }
+    fetchCategories();
+  }, []);
+
+  const handleCategoryChange = (id: number) => {
     setCategoryIds((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
+      prev.includes(id) ? prev.filter((cid) => cid !== id) : [...prev, id],
     );
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
+    setError(null);
+    setSuccess(false);
 
-    const res = await tutorProfileService.createTutorProfile({
-      bio,
-      hourlyRate: Number(hourlyRate),
-      status,
-      categoryIds,
-    });
-
-    if (res.error) {
-      setError(res.error.message);
-    } else {
-      alert("Tutor profile created successfully!");
+    try {
+      const response = await tutorProfileService.createTutorProfile({
+        bio,
+        hourlyRate: Number(hourlyRate),
+        status: status as "AVAILABLE" | "BUSY" | "OFFLINE",
+        categoryIds,
+      });
+      if (response.error) {
+        setError(response.error.message || "Failed to create profile");
+      } else {
+        setSuccess(true);
+        // Optionally reset form here:
+        setBio("");
+        setHourlyRate("");
+        setStatus("");
+        setCategoryIds([]);
+      }
+    } catch (err: any) {
+      setError(err.message || "Something went wrong");
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
@@ -62,6 +86,7 @@ export default function TutorProfilePage() {
             onChange={(e) => setBio(e.target.value)}
             className="w-full border p-2 rounded"
             required
+            rows={4}
           />
 
           <input
@@ -70,6 +95,8 @@ export default function TutorProfilePage() {
             value={hourlyRate}
             onChange={(e) => setHourlyRate(e.target.value)}
             className="w-full border p-2 rounded"
+            min={0}
+            step={0.01}
             required
           />
 
@@ -80,33 +107,48 @@ export default function TutorProfilePage() {
             required
           >
             <option value="">Select Status</option>
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
+            <option value="AVAILABLE">Available</option>
+            <option value="BUSY">Busy</option>
+            <option value="OFFLINE">Offline</option>
           </select>
 
-          <div className="space-y-2">
-            {categoriesList.map(({ id, name }) => (
-              <label key={id} className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={categoryIds.includes(id)}
-                  onChange={() => handleCategoryChange(id)}
-                />
-                {name}
-              </label>
-            ))}
+          <div>
+            <label className="block font-medium mb-1">Categories</label>
+            <div className="flex flex-wrap gap-4">
+              {categoriesList.length > 0 ? (
+                categoriesList.map(({ id, name }) => (
+                  <label
+                    key={id}
+                    className="inline-flex items-center space-x-2"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={categoryIds.includes(id)}
+                      onChange={() => handleCategoryChange(id)}
+                      className="rounded"
+                    />
+                    <span>{name}</span>
+                  </label>
+                ))
+              ) : (
+                <p>No categories available.</p>
+              )}
+            </div>
           </div>
 
-          {error && <p className="text-red-500">{error}</p>}
+          {error && <p className="text-red-600">{error}</p>}
+          {success && (
+            <p className="text-green-600">Profile created successfully!</p>
+          )}
 
-          <Button type="submit" disabled={loading} className="w-full">
-            {loading ? "Saving..." : "Submit"}
+          <Button type="submit" disabled={loading}>
+            {loading ? "Saving..." : "Save Profile"}
           </Button>
         </form>
 
         <Link
           href="/tutor/dashboard"
-          className="block mt-4 text-sm text-center"
+          className="block mt-4 text-sm text-blue-600 hover:underline"
         >
           Back to dashboard
         </Link>

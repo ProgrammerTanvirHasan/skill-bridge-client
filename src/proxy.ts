@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-
 import { userService } from "@/components/service/user.service";
 import { Roles } from "./types/roles";
 
@@ -10,36 +9,31 @@ export async function proxy(request: NextRequest) {
   let isAdmin = false;
   let isTutor = false;
 
-  const { data } = await userService.getSession();
+  const session = await userService.getSession();
 
-  if (data) {
-    isAuthenticated = true;
-    isAdmin = data.data.role === Roles.ADMIN;
-    isTutor = data.data.role === Roles.TUTOR;
-  }
-
-  if (!isAuthenticated) {
+  if (!session?.data?.data?.role) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  if (
-    (isAdmin && pathname.startsWith("/dashboard")) ||
-    pathname.startsWith("/tutor")
-  ) {
+  const role = session.data.data.role;
+  console.log(role, "rolekkkkk");
+
+  isAuthenticated = true;
+  isAdmin = role === Roles.ADMIN;
+  isTutor = role === Roles.TUTOR;
+
+  if (isAdmin && pathname.startsWith("/tutor")) {
     return NextResponse.redirect(new URL("/admin", request.url));
   }
 
-  if (
-    isTutor &&
-    (pathname.startsWith("/dashboard") || pathname.startsWith("/admin"))
-  ) {
+  if (isTutor && pathname.startsWith("/admin")) {
     return NextResponse.redirect(new URL("/tutor", request.url));
   }
 
   if (
     !isAdmin &&
     !isTutor &&
-    (pathname.startsWith("/tutor") || pathname.startsWith("/admin"))
+    (pathname.startsWith("/admin") || pathname.startsWith("/tutor"))
   ) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
@@ -48,12 +42,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    // "/dashboard",
-    // "/dashboard/:path*",
-    // "/admin",
-    // "/admin/:path*",
-    // "/tutor",
-    // "/tutor/:path*",
-  ],
+  matcher: ["/dashboard/:path*", "/admin/:path*", "/tutor/:path*"],
 };

@@ -3,15 +3,15 @@ export const tutorProfileService = {
     bio: string;
     hourlyRate: number;
     status: string;
-    categoryIds: string[];
+    categoryIds: number[];
   }) {
     try {
-      const res = await fetch("http://localhost:5000/api/tutor-profile", {
+      const res = await fetch("http://localhost:5000/api/tutor", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include", // cookie/session পাঠানোর জন্য
+        credentials: "include",
         body: JSON.stringify(payload),
       });
 
