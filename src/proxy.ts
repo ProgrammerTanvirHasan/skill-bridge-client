@@ -3,9 +3,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { userService } from "@/components/service/user.service";
 import { Roles } from "./types/roles";
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   console.log(pathname, "pathname");
+
   let isAuthenticated = false;
   let isAdmin = false;
   let isTutor = false;
@@ -18,20 +19,29 @@ export async function middleware(request: NextRequest) {
     isTutor = data.data.role === Roles.TUTOR;
   }
 
-  //* User in not authenticated at all
   if (!isAuthenticated) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  //* User is authenticated and role = ADMIN
-  //* User can not visit user dashboard
-  if (isAdmin && pathname.startsWith("/dashboard")) {
-    return NextResponse.redirect(new URL("/admin-dashboard", request.url));
+  if (
+    (isAdmin && pathname.startsWith("/dashboard")) ||
+    pathname.startsWith("/tutor")
+  ) {
+    return NextResponse.redirect(new URL("/admin", request.url));
   }
 
-  //* User is authenticated and role = USER
-  //* User can not visit admin-dashboard
-  if (!isAdmin && pathname.startsWith("/admin-dashboard")) {
+  if (
+    isTutor &&
+    (pathname.startsWith("/dashboard") || pathname.startsWith("/admin"))
+  ) {
+    return NextResponse.redirect(new URL("/tutor", request.url));
+  }
+
+  if (
+    !isAdmin &&
+    !isTutor &&
+    (pathname.startsWith("/tutor") || pathname.startsWith("/admin"))
+  ) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
@@ -42,7 +52,9 @@ export const config = {
   matcher: [
     "/dashboard",
     "/dashboard/:path*",
-    "/admin-dashboard",
-    "/admin-dashboard/:path*",
+    "/admin",
+    "/admin/:path*",
+    "/tutor",
+    "/tutor/:path*",
   ],
 };
