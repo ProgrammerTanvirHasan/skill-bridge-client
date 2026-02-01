@@ -44,17 +44,6 @@ export default function DahoardLayout({
               <BreadcrumbItem>
                 <BreadcrumbPage>Data Fetching</BreadcrumbPage>
               </BreadcrumbItem>
-              <div className="mt-8 flex flex-wrap gap-4">
-                <Button asChild>
-                  <Link href="/admin/users">Manage users</Link>
-                </Button>
-                <Button asChild variant="outline">
-                  <Link href="/admin/bookings">View bookings</Link>
-                </Button>
-                <Button asChild variant="outline">
-                  <Link href="/admin/categories">Manage categories</Link>
-                </Button>
-              </div>
             </BreadcrumbList>
           </Breadcrumb>
           <div className="ml-auto">

@@ -21,9 +21,7 @@ export default function TutorProfilePage() {
       <Card className="mt-6 max-w-lg">
         <CardHeader>
           <CardTitle>Profile</CardTitle>
-          <CardDescription>
-            Headline, bio, rate, and subjects
-          </CardDescription>
+          <CardDescription>Headline, bio, rate, and subjects</CardDescription>
         </CardHeader>
         <CardContent></CardContent>
       </Card>

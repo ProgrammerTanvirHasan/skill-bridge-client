@@ -21,7 +21,7 @@ export default function StudentDashboardPage() {
           </CardHeader>
           <CardContent>
             <Button asChild variant="link" size="sm" className="p-0">
-              <Link href="/dashboard/bookings">View all</Link>
+              <Link href="/dashboard/allSession">View all</Link>
             </Button>
           </CardContent>
         </Card>
@@ -46,16 +46,12 @@ export default function StudentDashboardPage() {
               <Link href="/dashboard/profile">Edit profile</Link>
             </Button>
           </CardContent>
+          <CardContent>
+            <Button asChild variant="link" size="sm" className="p-0">
+              <Link href="/dashboard/bookings">My booking</Link>
+            </Button>
+          </CardContent>
         </Card>
-      </div>
-
-      <div className="mt-6 flex gap-4">
-        <Button asChild>
-          <Link href="/tutors">Find a tutor</Link>
-        </Button>
-        <Button asChild variant="outline">
-          <Link href="/dashboard/bookings">My bookings</Link>
-        </Button>
       </div>
     </div>
   );

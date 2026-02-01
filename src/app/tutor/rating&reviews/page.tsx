@@ -21,15 +21,13 @@ export default function TutorProfilePage() {
       <Card className="mt-6 max-w-lg">
         <CardHeader>
           <CardTitle>Profile</CardTitle>
-          <CardDescription>
-            Headline, bio, rate, and subjects
-          </CardDescription>
+          <CardDescription>Headline, bio, rate, and subjects</CardDescription>
         </CardHeader>
         <CardContent></CardContent>
       </Card>
 
       <Button asChild variant="outline" className="mt-6">
-        <Link href="/tutor/dashboard">Back to dashboard</Link>
+        <Link href="/tutor">Back to dashboard</Link>
       </Button>
     </div>
   );

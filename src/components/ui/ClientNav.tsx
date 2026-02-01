@@ -29,14 +29,10 @@ export default function ClientNavbar({ user }: { user: any }) {
 
         {user ? (
           <>
-            {user.role === "ADMIN" && (
-              <Link href="/admin">Admin Dashboard</Link>
-            )}
-            {user.role === "TUTOR" && (
-              <Link href="/tutor">Tutor Dashboard</Link>
-            )}
+            {user.role === "ADMIN" && <Link href="/admin">Dashboard</Link>}
+            {user.role === "TUTOR" && <Link href="/tutor">Dashboard</Link>}
             {user.role === "STUDENT" && (
-              <Link href="/dashboard">Student Dashboard</Link>
+              <Link href="/dashboard">Dashboard</Link>
             )}
 
             <span className="font-semibold">{user.name}</span>
